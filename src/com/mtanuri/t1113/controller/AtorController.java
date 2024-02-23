@@ -1,62 +1,44 @@
 package com.mtanuri.t1113.controller;
 
 import com.mtanuri.t1113.repository.AtorRepository;
-import com.mtanuri.t1113.model.ator.Ator;
 
-public class AtorController extends Controller<Ator> {
+import java.util.Map;
+import java.util.Optional;
 
-	//private AtorRepository atoresRepository;
+import com.mtanuri.t1113.controller.command.Command;
+import com.mtanuri.t1113.controller.command.factory.AtoresCommandFactory;
+import com.mtanuri.t1113.controller.command.operacao.OperacoesAtor;
 
-	public AtorController(AtorRepository repository) {
-		super.crudRepository = repository;
+public class AtorController {
+
+	private AtorRepository atoresRepository;
+
+	private AtorController(AtorRepository repository) {
+		this.atoresRepository = repository;
 	}
 
+	private static AtorController instance ;
 
-	//	public void executar(OperacaoAtorDiretor operacao, Ator ator) {
-	//		if(operacao == OperacaoAtorDiretor.INSERIR) {
-	//			atoresRepository.inserir(ator);
-	//		}
-	//
-	//	}
+	public static AtorController getInstance(AtorRepository repository){
+		if(instance==null){
+			instance = new AtorController(repository);
+		}
+		return instance;
+	}
 
-	//	public void executar(OperacaoAtorDiretor operacao, Filme filme, int idAtor){
-	//		if(operacao == OperacaoAtorDiretor.ADICIONAR_FILME){
-	//			atoresRepository.vincular(filme, idAtor);
-	//		}
-	//	}
-	//
-	//	public void executar(OperacaoAtorDiretor operacao, Filme filme, int idAtor){
-	//		if(operacao == OperacaoAtorDiretor.REMOVER_FILME){
-	//			atoresRepository.desvincular(filme, idAtor);
-	//		}
-	//	}
+	public void executar(OperacoesAtor operacao) {
+		this.executar(operacao, null);
+	}
+	
+	public void executar(OperacoesAtor operacao, Map<String, Object> params) {
+		Optional<Command> command = AtoresCommandFactory.getInstance(atoresRepository).getCommand(operacao);
+		if(command.isPresent()){
+			command.get().executar(params);
+		}
+		else{
+			System.out.println("Comando nao encontrado para a opcao " + operacao);
+		}
 
-	//	public void executar(OperacaoAtorDiretor operacao, int id, String nome) {
-	//		if(operacao == OperacaoAtorDiretor.RENOMEAR) {
-	//			atoresRepository.renomear(id, nome);
-	//		}
-	//	}
-
-	//	public void executar(OperacaoAtorDiretor operacao, int id) {
-	//		if(operacao == OperacaoAtorDiretor.EXCLUIR) {
-	//			try {
-	//				atoresRepository.excluir(id);
-	//			} catch (Exception e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//	}
-
-	//	public void executar(OperacaoAtorDiretor operacao) {
-	//		if(operacao == OperacaoAtorDiretor.LISTAR_TODOS) {
-	//			atoresRepository.listarTodos().forEach((System.out::println));
-	//		}
-	//	}
-
-	//	public void executar(OperacaoAtorDiretor operacao, String nomeOuParteDoNome) {
-	//		if(operacao == OperacaoAtorDiretor.PESQUISAR) {
-	//			atoresRepository.pesquisarPorNome(nomeOuParteDoNome).forEach(System.out::println);
-	//		}
-	//	}
+	}
 
 }

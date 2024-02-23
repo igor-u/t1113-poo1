@@ -1,61 +1,44 @@
 package com.mtanuri.t1113.controller;
 
 import com.mtanuri.t1113.repository.DiretorRepository;
-import com.mtanuri.t1113.model.diretor.Diretor;
 
-public class DiretorController extends Controller<Diretor> {
+import java.util.Map;
+import java.util.Optional;
 
-	//private DiretorRepository diretoresRepository;
+import com.mtanuri.t1113.controller.command.Command;
+import com.mtanuri.t1113.controller.command.factory.DiretoresCommandFactory;
+import com.mtanuri.t1113.controller.command.operacao.OperacoesDiretor;
 
-	public DiretorController(DiretorRepository repository) {
-		super.crudRepository = repository;
+public class DiretorController {
+
+	private DiretorRepository diretoresRepository;
+
+	private DiretorController(DiretorRepository repository) {
+		this.diretoresRepository = repository;
 	}
 
-	//	public void executar(OperacaoAtorDiretor operacao, Diretor diretor) {
-	//		if (operacao == OperacaoAtorDiretor.INSERIR) {
-	//			diretoresRepository.inserir(diretor);
-	//		}
-	//	}
+	private static DiretorController instance ;
 
-	//	public void executar(OperacaoAtorDiretor operacao, int idDiretor, Filme filme){
-	//		if(operacao == OperacaoAtorDiretor.ADICIONAR_FILME){
-	//			diretoresRepository.adicionarFilme(idDiretor, filme);
-	//		}
-	//	}
-	//
-	//	public void executar(OperacaoAtorDiretor operacao, int idDiretor, int idFilme){
-	//		if(operacao == OperacaoAtorDiretor.REMOVER_FILME){
-	//			diretoresRepository.removerFilme(idDiretor, idFilme);
-	//		}
-	//
-	//	}
+	public static DiretorController getInstance(DiretorRepository repository){
+		if(instance==null){
+			instance = new DiretorController(repository);
+		}
+		return instance;
+	}
 
-	//	public void executar(OperacaoAtorDiretor operacao, int id, String nome) {
-	//		if(operacao == OperacaoAtorDiretor.RENOMEAR) {
-	//			diretoresRepository.renomear(id, nome);
-	//		}
-	//	}
+	public void executar(OperacoesDiretor operacao) {
+		this.executar(operacao, null);
+	}
+	
+	public void executar(OperacoesDiretor operacao, Map<String, Object> params) {
+		Optional<Command> command = DiretoresCommandFactory.getInstance(diretoresRepository).getCommand(operacao);
+		if(command.isPresent()){
+			command.get().executar(params);
+		}
+		else{
+			System.out.println("Comando nao encontrado para a opcao " + operacao);
+		}
 
-	//	public void executar(OperacaoAtorDiretor operacao, int id) {
-	//		if(operacao == OperacaoAtorDiretor.EXCLUIR) {
-	//			try {
-	//				diretoresRepository.excluir(id);
-	//			} catch (Exception e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
-	//	}
-
-	//	public void executar(OperacaoAtorDiretor operacao) {
-	//		if(operacao == OperacaoAtorDiretor.LISTAR_TODOS) {
-	//			diretoresRepository.listarTodos().forEach((System.out::println));
-	//		}
-	//	}
-
-	//	public void executar(OperacaoAtorDiretor operacao, String nomeOuParteDoNome) {
-	//		if(operacao == OperacaoAtorDiretor.PESQUISAR) {
-	//			diretoresRepository.pesquisarPorNome(nomeOuParteDoNome).forEach(System.out::println);
-	//		}
-	//	}
+	}
 
 }

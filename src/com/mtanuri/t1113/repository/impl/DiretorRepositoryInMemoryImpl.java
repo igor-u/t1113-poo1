@@ -3,8 +3,6 @@ package com.mtanuri.t1113.repository.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.mtanuri.t1113.model.ator.Ator;
 import com.mtanuri.t1113.model.diretor.Diretor;
 import com.mtanuri.t1113.model.filme.Filme;
 import com.mtanuri.t1113.repository.DiretorRepository;
@@ -15,14 +13,22 @@ public class DiretorRepositoryInMemoryImpl implements DiretorRepository {
 	
 	private static int contador = 0;
 
-	public DiretorRepositoryInMemoryImpl() {
+	private static final DiretorRepositoryInMemoryImpl instance = new DiretorRepositoryInMemoryImpl();
 
+	private DiretorRepositoryInMemoryImpl() {
+
+	}
+
+	public static DiretorRepositoryInMemoryImpl getInstance(){
+		return instance;
 	}
 
 	@Override
 	public Diretor inserir(Diretor diretor) {
+		if (!diretores.contains(diretor)) {
 		diretor.setId(++contador);
 		diretores.add(diretor);
+		}
 		return diretor;
 	}
 
@@ -33,22 +39,22 @@ public class DiretorRepositoryInMemoryImpl implements DiretorRepository {
 		return Diretor;
 	}
 
-//	@Override
-//	public Diretor adicionarFilme(int idDiretor, Filme filme) {
-//		Diretor Diretor = diretores.stream().filter(d -> d.getId() == idDiretor).findFirst().get();
-//		Diretor.getFilmes().add(filme);
-//		filme.getDiretores().add(Diretor);
-//		return Diretor;
-//	}
-//
-//	@Override
-//	public Diretor removerFilme(int idDiretor, int idFilme) {
-//		Diretor Diretor = diretores.stream().filter(d -> d.getId() == idDiretor).findFirst().get();
-//		Filme filme = Diretor.getFilmes().stream().filter(f -> f.getId() == idFilme).findFirst().get();
-//		Diretor.getFilmes().remove(filme);
-//		filme.getDiretores().remove(Diretor);
-//		return Diretor;
-//	}
+	@Override
+	public Diretor adicionarFilme(int idDiretor, Filme filme) {
+		Diretor Diretor = diretores.stream().filter(d -> d.getId() == idDiretor).findFirst().get();
+		Diretor.getFilmes().add(filme);
+		filme.getDiretores().add(Diretor);
+		return Diretor;
+	}
+
+	@Override
+	public Diretor removerFilme(int idDiretor, int idFilme) {
+		Diretor Diretor = diretores.stream().filter(d -> d.getId() == idDiretor).findFirst().get();
+		Filme filme = Diretor.getFilmes().stream().filter(f -> f.getId() == idFilme).findFirst().get();
+		Diretor.getFilmes().remove(filme);
+		filme.getDiretores().remove(Diretor);
+		return Diretor;
+	}
 
 	@Override
 	public void excluir(int id) {
@@ -68,44 +74,7 @@ public class DiretorRepositoryInMemoryImpl implements DiretorRepository {
 
 	@Override
 	public List<Diretor> pesquisarPorNome(String nomeOuParteDoNome) {
-		return diretores.stream().filter(a->a.getNome().toLowerCase().contains(nomeOuParteDoNome.toLowerCase()
-				)).collect(Collectors.toList());
-	}
-	
-	public void vincular(Filme filme, int idDiretor) {
-		Diretor diretor = diretores.stream().filter(d -> d.getId() == idDiretor).findFirst().get();
-		diretor.getFilmes().add(filme);
-		filme.getDiretores().add(diretor);
-	}
-	
-	public void desvincular(Filme filme, int idDiretor) {
-		Diretor diretor = diretores.stream().filter(d -> d.getId() == idDiretor).findFirst().get();
-		diretor.getFilmes().remove(filme);
-		filme.getDiretores().remove(diretor);
-	}
-
-	@Override
-	public void vincular(TipoVinculo t, Ator ator, int id2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void desvincular(TipoVinculo t, Ator ator, int id2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void vincular(TipoVinculo t, Diretor diretor, int id2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void desvincular(TipoVinculo t, Diretor diretor, int id2) {
-		// TODO Auto-generated method stub
-		
+		return diretores.stream().filter(a->a.getNome().contains(nomeOuParteDoNome)).collect(Collectors.toList());
 	}
 
 }
