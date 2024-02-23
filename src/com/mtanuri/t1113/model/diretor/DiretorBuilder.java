@@ -25,7 +25,6 @@ public class DiretorBuilder {
 	}
 
 	public Diretor build(){
-		diretor.setId();
 		return diretor;
 	}
 

@@ -9,7 +9,7 @@ import com.mtanuri.t1113.model.filme.Filme;
 
 public class Ator {
 	
-	private static int id = 0;
+	private int id;
 	private String nome;
 	private LocalDate dataNascimento;
 
@@ -35,8 +35,8 @@ public class Ator {
 		return id;
 	}
 
-	protected void setId() {
-		++id;
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public String getNome() {

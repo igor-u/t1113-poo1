@@ -10,7 +10,7 @@ import com.mtanuri.t1113.model.diretor.Diretor;
 
 public class Filme {
 
-	private int id = 0;
+	private int id;
     private String nome;
     private LocalDate dataLancamento;
     private double orcamento;
@@ -51,8 +51,8 @@ public class Filme {
 		return id;
 	}
 
-	protected void setId() {
-		++id;
+	public void setId(int id) {
+		this.id = id;
 	}
     
 	public String getNome() {
